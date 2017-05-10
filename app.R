@@ -1,3 +1,4 @@
+
 library(dplyr)
 library(magrittr)
 library(tidyr)
@@ -55,7 +56,7 @@ ui <- fluidPage(
                         width = 3
                       ),
                       mainPanel(ggvisOutput("pop_map"), 
-                                p("Note: This population map presents the 2000 census data."))
+                                p("Note that this population map presents the 2000 census data, and that it does not draw Alaska and Hawaii."))
                     )),
            tabPanel("Age Distribution", 
                     sidebarLayout(
@@ -76,7 +77,6 @@ ui <- fluidPage(
                       sidebarPanel(
                         selectInput("state", "Choose state(s):", choices = c("US", as.character(states$Name))),
                         hr(),
-                        helpText("Note: The first bar in red is for 2000 census data."),
                         width = 3
                       ),
                       mainPanel(
@@ -94,7 +94,6 @@ ui <- fluidPage(
                                        choices = states$Name, multiple = TRUE, 
                                        selected = c("California", "New York")),
                         hr(),
-                        helpText("Note: The bar for Age: 85 represents population aged 85 and 85+."),
                         width = 3
                       ),
                       mainPanel(uiOutput("ribbon_ui"), ggvisOutput("ribbon")) 
@@ -216,5 +215,6 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
 
 
