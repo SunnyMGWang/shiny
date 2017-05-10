@@ -10,6 +10,7 @@ The shiny app enables interaction with the data and plots. There are slider with
 For web interaction, please visit https://mengge.shinyapps.io/us_pop/.
 
 ===
+
 Data sources:
 
 * population: the dataset of US population by age, by state and by year is found on [United States Census Bureau](https://www.census.gov/population/projections/data/state/projectionsagesex.html).
