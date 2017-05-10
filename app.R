@@ -33,11 +33,8 @@ ui <- fluidPage(
    # Application title
    titlePanel("US Population Projection"),
    
-   # Sidebar with a slider input for number of bins 
+   # Fluid page with tab panels
    fluidPage(
-      
-      
-      # Show a plot of the generated distribution
 
          tabsetPanel(
            tabPanel("Population Map", 
@@ -107,7 +104,7 @@ ui <- fluidPage(
    )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic required to draw plots
 server <- function(input, output) {
 # First Plot -----------------------------------------------------------  
   # Load US states map data with ggplot2's map_data()
@@ -194,9 +191,7 @@ server <- function(input, output) {
         filter(Name %in% input$states) %>%
         mutate(to = cumsum(population), from = c(0, to[-n()]))
     }
-
   })
-
   
   pop_ribbon %>%
     ggvis(x = ~Age) %>%
