@@ -44,14 +44,14 @@ ui <- fluidPage(
                         p("This interactive toolbox explores the US population projection by state and by age from 2004 to 2030 based on 2000 census."),
                         br(),
                         p("It aims to answer the following questions:"),
-                        p("* How is US population distributed in the states?"),
+                        p("* How is US population distributed among the states?"),
                         p("* What is the age distribution of US population?"),
                         p("* What is the total population in the US/ a specific state in a given year?"),
                         p("* How does the population evolve over time?"),
                         br(),
                         p("Play around with the widgets and hover over the plots to get more information!"),
                         hr(),
-                        p(strong("Data Source:"), a(href="https://www.census.gov/population/projections/data/state/projectionsagesex.html", "US Census Bureau")),
+                        p(strong("Data Source:"), a(href="https://www.census.gov/population/projections/data/state/projectionsagesex.html", "US Census Bureau"), "File 3"),
                         p(strong("Get Code:"), a(href="https://github.com/SunnyMGWang/shiny-ggvis", "GitHub")),
                         width = 3
                       ),
@@ -85,12 +85,12 @@ ui <- fluidPage(
            tabPanel("Population Evolvement", 
                     sidebarLayout(
                       sidebarPanel(
-                        sliderInput("year", "Projection year:",
+                        sliderInput("year2", "Projection year:",
                                     min = 2004, max = 2030, value = 2004, animate = TRUE),
                         br(),
                         radioButtons("us_vs", "Show US Total or Compare States:",
                                      c("US Total" = "us", "Compare States" = "vs")),
-                        selectizeInput("states", "If you choose to Compare States, please specify the state(s):",
+                        selectizeInput("state2", "If you choose to Compare States, please specify the state(s):",
                                        choices = states$Name, multiple = TRUE, 
                                        selected = c("California", "New York")),
                         hr(),
@@ -182,16 +182,16 @@ server <- function(input, output) {
   pop_ribbon <- reactive({
     if (input$us_vs == 'us') {
     pop_state_age %>%
-      filter(year == input$year) %>%
+      filter(year == input$year2) %>%
       group_by(Age) %>% 
       arrange(Age) %>%
       mutate(to = cumsum(population), from = c(0, to[-n()]))
     } else {
       pop_state_age %>%
-        filter(year == input$year) %>%
+        filter(year == input$year2) %>%
         group_by(Age) %>% 
         arrange(Age) %>%
-        filter(Name %in% input$states) %>%
+        filter(Name %in% input$state2) %>%
         mutate(to = cumsum(population), from = c(0, to[-n()]))
     }
   })
