@@ -1,4 +1,3 @@
-
 library(dplyr)
 library(magrittr)
 library(tidyr)
@@ -7,6 +6,7 @@ library(ggvis)
 library(shiny)
 library(RColorBrewer)
 
+# Import raw data
 pop <- read.csv("data/population.csv", skip = 3, nrow = 4524)
 states <- read.csv("data/states.csv", nrow = 51)
 
@@ -26,13 +26,13 @@ pop_state_total$Age <- as.character(pop_state_total$Age)
 pop_state_age <- filter(pop_tidy, Age != "Total")
 pop_state_age$Age <- factor(pop_state_age$Age, levels = c(0:84, "85+"))
 
-# Define UI for application that draws a histogram
+# Define UI 
 ui <- fluidPage(
    
    # Application title
    titlePanel("US Population Projection"),
    
-   # Fluid page with tab panels
+   # Fluid page with tabs
    fluidPage(
 
          tabsetPanel(
@@ -49,7 +49,8 @@ ui <- fluidPage(
                         br(),
                         p("Play around with the widgets and hover over the plots to get more information!"),
                         hr(),
-                        p(strong("Data Source: "), "The data is from", a(href="https://www.census.gov/population/projections/data/state/projectionsagesex.html", "United States Census Bureau")),
+                        p(strong("Data Source:"), a(href="https://www.census.gov/population/projections/data/state/projectionsagesex.html", "US Census Bureau")),
+                        p(strong("Get Code:"), a(href="https://github.com/SunnyMGWang/shiny-ggvis", "GitHub")),
                         width = 3
                       ),
                       mainPanel(ggvisOutput("pop_map"), 
@@ -95,23 +96,25 @@ ui <- fluidPage(
                         helpText("Note: The bar for Age: 85 represents population aged 85 and 85+."),
                         width = 3
                       ),
-                      mainPanel(uiOutput("ribbon_ui"), ggvisOutput("ribbon"))
+                      mainPanel(uiOutput("ribbon_ui"), ggvisOutput("ribbon")) 
                     ))
          )
-  
    )
 )
 
-# Define server logic required to draw plots
+# Define server logic 
 server <- function(input, output) {
+
 # First Plot -----------------------------------------------------------  
-  # Load US states map data with ggplot2's map_data()
+  
+  # Load US states map data with map_data()
   us_map <- map_data("state") %>% select(1:5)
   
   # To merge us_map with pop_state_total, create a Name column for states with first letter capitalized in us_map that can match the Name column in pop_state_total
   us_map$Name <- tools::toTitleCase(us_map$region)
   pop_state_total_2000 <- pop_state_total %>% filter(year == "2000")
   pop_map <- merge(us_map, pop_state_total_2000, all.x = TRUE)
+  
   # Create the value to show when hovered over the map
   # I only want to show state name and population, which is the 1st and 4th item in the list, so I use c(1, 4)
   pop_values <- function(x) {
@@ -127,9 +130,10 @@ server <- function(input, output) {
     hide_axis("y") %>%
     scale_numeric("fill", range = c("white", "#3182bd")) %>%
     add_tooltip(pop_values, "hover") %>%
-    set_options(width=800, height=450, keep_aspect=TRUE) %>%
+    set_options(width=900, height=500, keep_aspect=TRUE) %>%
     bind_shiny("pop_map")
 
+  
 # Second Plot -----------------------------------------------------------  
   pop_agebar <- reactive({
     pop_state_age %>% 
@@ -148,6 +152,7 @@ server <- function(input, output) {
                                    collapse = "<br />")) %>%
     set_options(width=900, height=500, keep_aspect=TRUE)%>%
     bind_shiny("agebar", "agebar_ui")
+  
   
 # Third Plot -----------------------------------------------------------
   pop_yearbar <- reactive({
@@ -172,8 +177,8 @@ server <- function(input, output) {
     set_options(width=900, height=500, keep_aspect=TRUE)%>%
     bind_shiny("yearbar", "yearbar_ui")
   
-# Fourth Plot -----------------------------------------------------------
   
+# Fourth Plot -----------------------------------------------------------
   pop_ribbon <- reactive({
     if (input$us_vs == 'us') {
     pop_state_age %>%
@@ -190,7 +195,7 @@ server <- function(input, output) {
         mutate(to = cumsum(population), from = c(0, to[-n()]))
     }
   })
-  
+
   pop_ribbon %>%
     ggvis(x = ~Age) %>%
     group_by(Name) %>%
@@ -210,4 +215,5 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
 
