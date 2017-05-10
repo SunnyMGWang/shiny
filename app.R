@@ -1,6 +1,7 @@
 library(dplyr)
 library(magrittr)
 library(tidyr)
+library(ggplot2)
 library(maps)
 library(ggvis)
 library(shiny)
