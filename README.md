@@ -14,4 +14,4 @@ Data sources:
 
 * population: the dataset of US population by age, by state and by year is found on [United States Census Bureau](https://www.census.gov/population/projections/data/state/projectionsagesex.html).
 
-* states: the dataset of US state names and abbreviations are found on [Github](https://github.com/jasonong/List-of-US-States/blob/master/states.csv)
+* states: the dataset of US state names and abbreviations is found on [Github](https://github.com/jasonong/List-of-US-States/blob/master/states.csv).
