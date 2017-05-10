@@ -3,7 +3,6 @@ library(dplyr)
 library(magrittr)
 library(tidyr)
 library(maps)
-library(ggplot2)
 library(ggvis)
 library(shiny)
 library(RColorBrewer)
@@ -96,8 +95,7 @@ ui <- fluidPage(
                         helpText("Note: The bar for Age: 85 represents population aged 85 and 85+."),
                         width = 3
                       ),
-                      mainPanel(fluidRow(uiOutput("ribbon_ui"), ggvisOutput("ribbon"))
-                      )
+                      mainPanel(uiOutput("ribbon_ui"), ggvisOutput("ribbon"))
                     ))
          )
   
